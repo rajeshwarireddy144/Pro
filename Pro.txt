@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    def gitRepo = 'https://github.com/yourusername/your-repo.git'
+                    def gitCredentialsId = 'your-git-credentials-id'
+                    def repoDir = 'repo'
+
+                    // Clone the repository
+                    git credentialsId: gitCredentialsId, url: gitRepo, branch: 'master', directory: repoDir
+                }
+            }
+        }
+        
+        stage('Display Commit ID') {
+            steps {
+                script {
+                    def commitId = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+                    echo "Code has been successfully read and the latest commit ID is ${commitId}"
+                }
+            }
+        }
+    }
+}
